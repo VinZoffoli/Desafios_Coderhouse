@@ -61,7 +61,7 @@ try {
         description: 'Escultura de personaje',
         price: 150,
         thumbnail: 'Imagen2',
-        code: 'abc123',
+        code: 'genshin01',
         stock: 10,
     });
 } catch (error) {
