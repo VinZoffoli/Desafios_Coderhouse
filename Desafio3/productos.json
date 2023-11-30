@@ -1,0 +1,182 @@
+[
+    {
+        "title": "Genshin Impact: Lumine",
+        "description": "Escultura de personaje",
+        "price": 169,
+        "thumbnail": "Imagen",
+        "code": "genshin01",
+        "stock": 25,
+        "id": 1
+    },
+    {
+        "title": "Genshin Impact: Aether",
+        "description": "Escultura de personaje",
+        "price": 150,
+        "thumbnail": "Imagen2",
+        "code": "genshin02",
+        "stock": 10,
+        "id": 2
+    },
+    {
+        "title": "Genshin Impact: Amber",
+        "description": "Figura coleccionable",
+        "price": 120,
+        "thumbnail": "Imagen3",
+        "code": "genshin03",
+        "stock": 15,
+        "id": 3
+    },
+    {
+        "title": "Genshin Impact: Diluc",
+        "description": "Estatuilla de personaje",
+        "price": 200,
+        "thumbnail": "Imagen4",
+        "code": "genshin04",
+        "stock": 8,
+        "id": 4
+    },
+    {
+        "title": "Genshin Impact: Fischl",
+        "description": "Figura de acción",
+        "price": 180,
+        "thumbnail": "Imagen5",
+        "code": "genshin05",
+        "stock": 20,
+        "id": 5
+    },
+    {
+        "title": "Genshin Impact: Venti",
+        "description": "Estatuilla coleccionable",
+        "price": 220,
+        "thumbnail": "Imagen6",
+        "code": "genshin06",
+        "stock": 12,
+        "id": 6
+    },
+    {
+        "title": "Genshin Impact: Zhongli",
+        "description": "Figura de personaje",
+        "price": 250,
+        "thumbnail": "Imagen7",
+        "code": "genshin07",
+        "stock": 18,
+        "id": 7
+    },
+    {
+        "title": "Genshin Impact: Xiangling",
+        "description": "Escultura de personaje",
+        "price": 190,
+        "thumbnail": "Imagen8",
+        "code": "genshin08",
+        "stock": 14,
+        "id": 8
+    },
+    {
+        "title": "Genshin Impact: Mona",
+        "description": "Figura de colección",
+        "price": 280,
+        "thumbnail": "Imagen9",
+        "code": "genshin09",
+        "stock": 10,
+        "id": 9
+    },
+    {
+        "title": "Genshin Impact: Keqing",
+        "description": "Figura de personaje",
+        "price": 260,
+        "thumbnail": "Imagen10",
+        "code": "genshin10",
+        "stock": 16,
+        "id": 10
+    },
+    {
+        "title": "Genshin Impact: Childe",
+        "description": "Figura de personaje",
+        "price": 270,
+        "thumbnail": "Imagen11",
+        "code": "genshin11",
+        "stock": 22,
+        "id": 11
+    },
+    {
+        "title": "Genshin Impact: Sucrose",
+        "description": "Figura coleccionable",
+        "price": 200,
+        "thumbnail": "Imagen12",
+        "code": "genshin12",
+        "stock": 17,
+        "id": 12
+    },
+    {
+        "title": "Genshin Impact: Albedo",
+        "description": "Escultura de personaje",
+        "price": 240,
+        "thumbnail": "Imagen13",
+        "code": "genshin13",
+        "stock": 13,
+        "id": 13
+    },
+    {
+        "title": "Genshin Impact: Razor",
+        "description": "Figura de acción",
+        "price": 180,
+        "thumbnail": "Imagen14",
+        "code": "genshin14",
+        "stock": 19,
+        "id": 14
+    },
+    {
+        "title": "Genshin Impact: Beidou",
+        "description": "Estatuilla de personaje",
+        "price": 210,
+        "thumbnail": "Imagen15",
+        "code": "genshin15",
+        "stock": 16,
+        "id": 15
+    },
+    {
+        "title": "Genshin Impact: Diona",
+        "description": "Figura de colección",
+        "price": 260,
+        "thumbnail": "Imagen16",
+        "code": "genshin16",
+        "stock": 14,
+        "id": 16
+    },
+    {
+        "title": "Genshin Impact: Klee",
+        "description": "Escultura de personaje",
+        "price": 290,
+        "thumbnail": "Imagen17",
+        "code": "genshin17",
+        "stock": 11,
+        "id": 17
+    },
+    {
+        "title": "Genshin Impact: Qiqi",
+        "description": "Figura de personaje",
+        "price": 310,
+        "thumbnail": "Imagen18",
+        "code": "genshin18",
+        "stock": 15,
+        "id": 18
+    },
+    {
+        "title": "Genshin Impact: Xingqiu",
+        "description": "Estatuilla coleccionable",
+        "price": 180,
+        "thumbnail": "Imagen19",
+        "code": "genshin19",
+        "stock": 20,
+        "id": 19
+    },
+    {
+        "title": "Genshin Impact: Jean",
+        "description": "Figura de personaje",
+        "price": 280,
+        "thumbnail": "Imagen20",
+        "code": "genshin20",
+        "stock": 18,
+        "id": 20
+    }
+]
