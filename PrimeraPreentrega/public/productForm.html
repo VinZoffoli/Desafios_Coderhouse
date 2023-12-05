@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario para agregar productos</title>
+</head>
+<body>
+    <h3>Agregar Producto</h3>
+    <form action="/api/productos" method="POST">
+        <label for="title">Título:</label>
+        <input type="text" name="title" required>
+    
+        <label for="description">Descripción:</label>
+        <input type="text" name="description" required>
+    
+        <label for="code">Código:</label>
+        <input type="text" name="code" required>
+    
+        <label for="price">Precio:</label>
+        <input type="number" name="price" step="0.01" required>
+    
+        <label for="status">Estado:</label>
+        <input type="checkbox" name="status" checked>
+    
+        <label for="stock">Stock:</label>
+        <input type="number" name="stock" required>
+    
+        <label for="category">Categoría:</label>
+        <input type="text" name="category" required>
+    
+        <label for="thumbnails">Imágenes (separadas por comas):</label>
+        <input type="text" name="thumbnails">
+    
+        <button type="submit">Agregar producto a la lista</button>
+    </form>
+    
+</body>
+</html>

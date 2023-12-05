@@ -1,4 +1,4 @@
-const Contenedor = require("./Contenedor");
+const Contenedor = require("./contenedor");
 const express = require('express');
 const app = express();
 /*  Recordar que sea 8080 para glitch.me  */
