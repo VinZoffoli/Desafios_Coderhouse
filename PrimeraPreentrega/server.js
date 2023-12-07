@@ -1,6 +1,7 @@
 const express = require('express');
 const Contenedor = require('./src/contenedor');
 const contenedor = new Contenedor("productos.json");
+const cartsRouter = require('./src/cartRouter');
 const app = express();
 app.use(express.static('public'));
 
@@ -14,10 +15,23 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/productos', router);
+app.use('/api/carts', cartsRouter);
 
 router.get('/', async (req, res) => {
-    const products = await contenedor.getAll();
-    res.status(200).json(products);
+    try {
+        const { limit } = req.query;
+        const products = await contenedor.getAll();
+
+        if (limit) {
+            const limitedProducts = products.slice(0, Number(limit));
+            res.status(200).json(limitedProducts);
+        } else {
+            res.status(200).json(products);
+        }
+    } catch (error) {
+        console.log(`Error: ${error.message}`);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 router.get('/:id', async (req, res) => {
@@ -30,27 +44,33 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { body } = req;
+    try {
+        const { body } = req;
+        const { title, description, code, price, stock, category, thumbnails } = body;
+        
+        if (!title || !description || !code || !price || !stock || !category) {
+            return res.status(400).send('Todos los campos son obligatorios, excepto thumbnails');
+        }
 
-    const { title, description, code, price, status, stock, category, thumbnails } = body;
-    if (!title || !description || !code || !price || !stock || !category) {
-        return res.status(400).send('Todos los campos son obligatorios, excepto thumbnails');
+        const newProduct = {
+            title,
+            description,
+            code,
+            price: Number(price),
+            status: true, 
+            stock: Number(stock),
+            category,
+            thumbnails: thumbnails ? thumbnails.split(',') : []
+        };
+
+        const newProductId = await contenedor.save(newProduct);
+        res.status(200).send(`Producto agregado con el ID: ${newProductId}`);
+    } catch (error) {
+        console.log(`Error: ${error.message}`);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    const newProduct = {
-        title,
-        description,
-        code,
-        price: Number(price),
-        status: status || true,
-        stock: Number(stock),
-        category,
-        thumbnails: thumbnails ? thumbnails.split(',') : []
-    };
-
-    const newProductId = await contenedor.save(newProduct);
-    res.status(200).send(`Producto agregado con el ID: ${newProductId}`);
 });
+
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
