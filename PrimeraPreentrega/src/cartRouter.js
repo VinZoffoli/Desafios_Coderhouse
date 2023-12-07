@@ -1,7 +1,8 @@
 const express = require('express');
 const Contenedor = require('./contenedor');
 const router = express.Router();
-const cartContenedor = new Contenedor('carrito.json');
+const CartContenedor = require('./cartContenedor');
+const cartContenedor = new CartContenedor('carrito.json');
 
 const createCart = async () => {
     try {

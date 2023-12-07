@@ -1,8 +1,12 @@
-{
-    "carts": [
-        {
-            "cartId": 1,
-            "products": []
-        }
-    ]
-}
+[
+    {
+        "cartId": 1,
+        "products": [
+            "Keqing: Figura Coleccionable"
+        ]
+    },
+    {
+        "cartId": "twep09",
+        "products": []
+    }
+]
