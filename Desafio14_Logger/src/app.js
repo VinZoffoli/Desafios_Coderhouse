@@ -14,7 +14,7 @@ import config from './config.js';
 import CustomError from './handlers/errors/custom-error.js';
 import EErrors from './handlers/errors/enum-errors.js';
 import errorHandler from './middleware/errors/error-handler.js';
-import logger from './middleware/logger.middleware.js'; 
+import loggerMiddleware from './middleware/logger.middleware.js'; 
 import addLogger from './utils/winston/logger.js';
 
 dotenv.config();
@@ -23,7 +23,7 @@ const app = express(); // Crea una nueva aplicación Express
 const server = http.createServer(app); // Crea un servidor HTTP utilizando la aplicación Express
 const io = new Server(server); // Crea una instancia de Socket.io para gestionar WebSockets
 
-app.use(logger);
+app.use(loggerMiddleware);
 
 // Configura el middleware de autenticación de Passport.js
 configureAuthMiddleware(app);
