@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+
+<body>
+    <div id="usernameForm">
+        <h1>Chat</h1>
+        <form id="usernameForm">
+            <input type="text" id="user" placeholder="Ingresa tu nombre de usuario">
+            <button type="button" onclick="setUsername()">Ingresar</button>
+        </form>
+    </div>
+
+    <div id="chatForm" style="display: none;">
+        <form id="messageForm">
+            <input type="text" id="message" placeholder="Escribe tu mensaje">
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div id="messageList">
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+    <script>
+        function setUsername() {
+            const user = document.getElementById('user').value;
+            if (user.trim() !== "") {
+                socket.emit('setUsername', user);
+                document.getElementById('usernameForm').style.display = 'none';
+                document.getElementById('chatForm').style.display = 'block';
+            } else {
+                alert('Por favor, ingresa un nombre de usuario válido.');
+            }
+        }
+    </script>
+</body>
+
+
+</html>
