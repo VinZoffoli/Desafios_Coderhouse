@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-o9IyADxlmcw0WG1fAqJg5qfFsrjCXyqOO0lKjiVrQytdyyAsDnbKZ2Ug6PShBbMZz9I5wBtSQKz+fEVXDWqJrg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Productos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #navbar {
+            background-color: #343a40;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #navbar a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .search-bar button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            margin-left: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-right form {
+            margin-right: 15px;
+        }
+
+        .navbar-right p {
+            margin: 0;
+            margin-right: 15px;
+        }
+
+        #cart-count {
+            margin-right: 5px;
+            color: #fff;
+            background-color: #007bff;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            color: #343a40;
+            margin-bottom: 30px;
+        }
+
+        .product-container {
+            background-color: #fff;
+            border: 1px solid #e2e2e2;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .product-container p {
+            margin: 10px 0;
+            color: #495057;
+        }
+
+        .product-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .pagination {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination a {
+            color: #007bff;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar">
+        <div class="navbar-left">
+            <a href="/">Inicio</a>
+            <a href="/products">Productos</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar productos...">
+                <button type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="navbar-right">
+            {{#if user}}
+            <p>Bienvenido, {{useremail}}. Rol: {{role}}</p>
+            {{/if}}
+            <a href="/carts/{{cartId}}">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">{{cartCount}}</span>
+                <span id="cart-label">Carrito</span>
+            </a>
+        </div>
+    </div>
+
+    <h1>Productos</h1>
+
+    {{#each products}}
+    <div class="product-container">
+        <p>{{title}}</p>
+        <p>{{description}}</p>
+        <p>Precio: ${{price}}</p>
+        <button onclick="addToCart('{{this.id}}', '{{../cartId}}')">Agregar al carrito</button>
+    </div>
+    {{/each}}
+
+    <div class="pagination">
+        {{#if showPrev}}
+        <a href="{{prevLink}}">← Página anterior</a>
+        {{/if}}
+
+        <span>Página {{page}} de {{totalPages}}</span>
+
+        {{#if showNext}}
+        <a href="{{nextLink}}">Página siguiente →</a>
+        {{/if}}
+    </div>
+
+    <script>
+        async function addToCart(productId, cartId) {
+            try {
+                const response = await fetch(`/carts/${cartId}/product/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId })
+                });
+
+                if (response.ok) {
+                    updateCartCount(cartId);
+                    alert(`Producto agregado al carrito con ID: ${productId}`);
+                } else {
+                    alert(`Error al agregar producto al carrito: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function updateCartCount(cartId) {
+            try {
+                console.log('Updating cart count...');
+                const cartResponse = await fetch(`/carts/${cartId}`);
+                if (cartResponse.ok) {
+                    const cartData = await cartResponse.json();
+                    const cartCountElement = document.getElementById('cart-count');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = cartData.products.length.toString();
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cartId = '{{cartId}}'; 
+            updateCartCount(cartId);
+        });
+    </script>
+
+</body>
+
+</html>
