@@ -1,9 +1,9 @@
-import chai from 'chai';
+import * as chai from 'chai';
 import supertest from 'supertest';
 import app from '../src/app.js'; 
 
 const expect = chai.expect;
-const request = supertest(app);
+const request = supertest('http://localhost:3000');
 
 describe('Sessions Router', () => {
     it('should log in a user and return a session cookie', async () => {

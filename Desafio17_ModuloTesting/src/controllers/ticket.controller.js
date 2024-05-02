@@ -8,6 +8,7 @@ async function getAllTickets(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
 async function getTicketById(req, res) {
     const ticketId = req.params.id;
     try {
@@ -20,6 +21,7 @@ async function getTicketById(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
 async function createTicket(req, res) {
     const ticketData = req.body;
     try {
@@ -29,6 +31,7 @@ async function createTicket(req, res) {
         res.status(400).json({ message: error.message });
     }
 }
+
 async function updateTicket(req, res) {
     const ticketId = req.params.id;
     const updatedTicketData = req.body;
@@ -39,6 +42,7 @@ async function updateTicket(req, res) {
         res.status(400).json({ message: error.message });
     }
 }
+
 async function deleteTicket(req, res) {
     const ticketId = req.params.id;
     try {
