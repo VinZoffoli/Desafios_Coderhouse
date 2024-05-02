@@ -1,11 +1,12 @@
+import express from 'express';
 import UserModel from '../DAO/models/user.js';
 import TokenModel from '../DAO/models/token.js';
 import sendPasswordResetEmail from '../utils/nodemailer.util.js';
-import CustomError from '../handlers/errors/custom-error.js';
-import EErrors from '../handlers/errors/enum-errors.js';
 import crypto from 'crypto';
 
-const forgotPassword = async (req, res) => {
+const router = express.Router();
+
+router.post('/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
         const user = await UserModel.findOne({ email });
@@ -23,9 +24,9 @@ const forgotPassword = async (req, res) => {
         console.error('Error al solicitar restablecimiento de contraseña:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
-};
+});
 
-const resetPasswordForm = async (req, res) => {
+router.get('/reset-password/:token', async (req, res) => {
     try {
         const token = req.params.token;
         const tokenData = await TokenModel.findOne({ token });
@@ -37,9 +38,9 @@ const resetPasswordForm = async (req, res) => {
         console.error('Error al mostrar formulario de restablecimiento de contraseña:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
-};
+});
 
-const resetPassword = async (req, res) => {
+router.post('/reset-password/:token', async (req, res) => {
     try {
         const { token } = req.params;
         const { newPassword } = req.body;
@@ -64,10 +65,6 @@ const resetPassword = async (req, res) => {
         console.error('Error al restablecer contraseña:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
-};
+});
 
-export default {
-    forgotPassword,
-    resetPasswordForm,
-    resetPassword
-};
+export default router;

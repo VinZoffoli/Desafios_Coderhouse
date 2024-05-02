@@ -1,15 +1,18 @@
+import express from 'express';
 import TicketRepository from '../Repository/ticket.repository.js';
 
-async function getAllTickets(req, res) {
+const router = express.Router();
+
+router.get('/', async (req, res) => {
     try {
         const tickets = await TicketRepository.getAllTickets();
         res.status(200).json(tickets);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+});
 
-async function getTicketById(req, res) {
+router.get('/:id', async (req, res) => {
     const ticketId = req.params.id;
     try {
         const ticket = await TicketRepository.getTicketById(ticketId);
@@ -20,9 +23,9 @@ async function getTicketById(req, res) {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+});
 
-async function createTicket(req, res) {
+router.post('/', async (req, res) => {
     const ticketData = req.body;
     try {
         const newTicket = await TicketRepository.createTicket(ticketData);
@@ -30,9 +33,9 @@ async function createTicket(req, res) {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+});
 
-async function updateTicket(req, res) {
+router.put('/:id', async (req, res) => {
     const ticketId = req.params.id;
     const updatedTicketData = req.body;
     try {
@@ -41,9 +44,9 @@ async function updateTicket(req, res) {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+});
 
-async function deleteTicket(req, res) {
+router.delete('/:id', async (req, res) => {
     const ticketId = req.params.id;
     try {
         await TicketRepository.deleteTicket(ticketId);
@@ -51,12 +54,6 @@ async function deleteTicket(req, res) {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+});
 
-export default {
-    getAllTickets,
-    getTicketById,
-    createTicket,
-    updateTicket,
-    deleteTicket
-};
+export default router;

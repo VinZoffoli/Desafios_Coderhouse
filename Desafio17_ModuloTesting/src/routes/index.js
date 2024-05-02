@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import productsRouter from './products.routes.js';
-import cartsRouter from './carts.routes.js';
+import productsController from '../controllers/products.controller.js';
+import cartController from '../controllers/cart.controller.js';
 import userController from '../controllers/user.controller.js';
 import authController from '../controllers/auth.controller.js';
 import ticketController from '../controllers/ticket.controller.js';
@@ -8,6 +8,8 @@ import generateProducts from '../utils/products-mock.util.js';
 import passwordController from '../controllers/password.controller.js';
 import ProductManager from "../services/db/product.service.js";
 import { createLogger } from 'winston';
+import { swaggerDocs, swaggerUi } from '../config/swaggerConfig.js';
+import chatController from '../controllers/chat.controller.js';
 
 const router = Router();
 const manager = new ProductManager('./src/data/products.json');
@@ -15,8 +17,12 @@ const logger = createLogger();
 
 router.use('/auth', authController);
 router.use('/user', userController);
-router.use('/products', productsRouter);
-router.use('/carts', cartsRouter);
+router.use('/products', productsController);
+router.use('/carts', cartController); 
+router.use('/tickets', ticketController);
+router.use('/password', passwordController);
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+router.use('/chat', chatController);
 
 router.get('/mockingproducts/:numProducts', (req, res, next) => {
     try {
@@ -36,7 +42,6 @@ router.get('/loggerTest', (req, res, next) => {
     logger.warn('Este es un mensaje de warning');
     logger.error('Este es un mensaje de error');
     logger.fatal('Este es un mensaje de fatal');
-
     res.json({ message: 'Prueba exitosa del logger' });
 });
 
@@ -56,23 +61,5 @@ router.get('/noRealTimeProducts', async (req, res) => {
 router.get('/addProduct', (req, res) => {
     res.render('addProduct');
 });
-
-// Rutas de chat
-router.get('/chat', (req, res) => {
-    res.render('chat');
-});
-
-//Rutas de Tickets
-router.get('/tickets', ticketController.getAllTickets);
-router.get('/tickets/:id', ticketController.getTicketById);
-router.post('/tickets', ticketController.createTicket);
-router.put('/tickets/:id', ticketController.updateTicket);
-router.delete('/tickets/:id', ticketController.deleteTicket);
-
-//Rutas de Password
-router.get('/forgot-password', passwordController.forgotPassword);
-router.post('/forgot-password', passwordController.forgotPassword); 
-router.get('/reset-password/:token', passwordController.resetPasswordForm); 
-router.post('/reset-password/:token', passwordController.resetPassword); 
 
 export default router;

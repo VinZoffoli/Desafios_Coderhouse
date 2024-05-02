@@ -1,3 +1,4 @@
+import { Router } from 'express';
 import * as UserModel from '../DAO/models/user.js';
 import { CartModel } from '../DAO/models/cart.js';
 import CartManager from "../services/db/cart.service.js";
@@ -5,6 +6,7 @@ import { MODEL_CARTS } from "../DAO/models/cart.js";
 import Product from "../DAO/models/product.js";
 
 const manager = new CartManager('./src/data/cart.json');
+const router = Router();
 
 /**
  * @swagger
@@ -27,7 +29,7 @@ const manager = new CartManager('./src/data/cart.json');
  *       '500':
  *         description: Error en el servidor.
  */
-export const addToCart = async (req, res, next) => {
+router.post('/add', async (req, res, next) => {
     try {
         const { productId } = req.body;
         const { userId } = req.session;
@@ -54,7 +56,7 @@ export const addToCart = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+});
 
 /**
  * @swagger
@@ -68,14 +70,14 @@ export const addToCart = async (req, res, next) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function addCart(req, res) {
+router.post('/', async (req, res) => {
     try {
         let status = await manager.addCart();
         res.status(status.code).json({ status: status.status });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -98,7 +100,7 @@ export async function addCart(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function getCartById(req, res) {
+router.get('/:cid', async (req, res) => {
     try {
         const cart = await MODEL_CARTS.findById(req.params.cid).populate('products.product').lean();
 
@@ -112,7 +114,7 @@ export async function getCartById(req, res) {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -150,7 +152,7 @@ export async function getCartById(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function addProductToCart(req, res) {
+router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
 
@@ -171,7 +173,7 @@ export async function addProductToCart(req, res) {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -198,7 +200,7 @@ export async function addProductToCart(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function removeProductFromCart(req, res) {
+router.delete('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
 
@@ -213,7 +215,7 @@ export async function removeProductFromCart(req, res) {
         console.error('Error al eliminar el producto:', error);
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -250,7 +252,7 @@ export async function removeProductFromCart(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function updateCart(req, res) {
+router.put('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
         const { products } = req.body;
@@ -259,7 +261,7 @@ export async function updateCart(req, res) {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -295,7 +297,7 @@ export async function updateCart(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function updateProductQuantity(req, res) {
+router.patch('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const { quantity } = req.body;
@@ -304,7 +306,7 @@ export async function updateProductQuantity(req, res) {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
 
 /**
  * @swagger
@@ -325,7 +327,7 @@ export async function updateProductQuantity(req, res) {
  *       '500':
  *         description: Error en el servidor.
  */
-export async function clearCart(req, res) {
+router.delete('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
         const status = await manager.clearCart(cid);
@@ -333,4 +335,6 @@ export async function clearCart(req, res) {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-}
+});
+
+export default router;

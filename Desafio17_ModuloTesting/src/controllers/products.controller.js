@@ -1,3 +1,4 @@
+import express from 'express';
 import { productRepository } from '../Repository/index.js';
 import CustomError from '../handlers/errors/custom-error.js';
 import EErrors from '../handlers/errors/enum-errors.js';
@@ -5,8 +6,9 @@ import User from '../DAO/models/user.js';
 import ProductManager from "../services/db/product.service.js";
 import ProductService from "../services/db/product.service.js";
 
+const router = express.Router();
 const manager = new ProductManager('./src/data/products.json');
-const productService = new ProductService(); 
+const productService = new ProductService();
 
 /**
  * @swagger
@@ -20,7 +22,7 @@ const productService = new ProductService();
  *       '500':
  *         description: Error en el servidor.
  */
-export const getProducts = async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const user = req.user;
         const useremail = user.email;
@@ -39,7 +41,7 @@ export const getProducts = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
-};
+});
 
 
 /**
@@ -79,11 +81,10 @@ export const getProducts = async (req, res) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export const getPaginatedProducts = async (req, res) => {
+router.get('/paginate', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
 
-        const productService = new ProductService();
         const products = await productService.getPaginatedProducts({ limit, page, sort, query });
 
         const user = req.user;
@@ -117,7 +118,7 @@ export const getPaginatedProducts = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-};
+});
 
 /**
  * @swagger
@@ -140,7 +141,7 @@ export const getPaginatedProducts = async (req, res) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export const getProductById = async (req, res, next) => {
+router.get('/:pid', async (req, res, next) => {
     try {
         const { pid } = req.params;
         const product = await productService.getProductById(pid);
@@ -153,7 +154,7 @@ export const getProductById = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-};
+});
 
 /**
  * @swagger
@@ -180,7 +181,7 @@ export const getProductById = async (req, res, next) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export const createProduct = async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
         if (!req.body.title || !req.body.description || !req.body.price) {
             throw CustomError.createError({
@@ -209,9 +210,9 @@ export const createProduct = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+});
 
-export const addProduct = async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
         let productToAdd = req.body;
         if (!('status' in productToAdd)) {
@@ -224,9 +225,9 @@ export const addProduct = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-};
+});
 
-export const removeProduct = async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const productId = req.params.id;
         const user = req.user;
@@ -254,9 +255,9 @@ export const removeProduct = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+});
 
-export const updateExistingProduct = async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     try {
         const productId = req.params.id;
         const { title, description, price } = req.body;
@@ -285,7 +286,7 @@ export const updateExistingProduct = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+});
 
 /**
  * @swagger
@@ -312,7 +313,7 @@ export const updateExistingProduct = async (req, res, next) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export const updateProduct = async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     try {
         const { pid } = req.params;
         const productToUpdate = req.body;
@@ -323,7 +324,7 @@ export const updateProduct = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-};
+});
 
 /**
  * @swagger
@@ -344,7 +345,7 @@ export const updateProduct = async (req, res, next) => {
  *       '500':
  *         description: Error en el servidor.
  */
-export const deleteProduct = async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const { pid } = req.params;
 
@@ -354,4 +355,6 @@ export const deleteProduct = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
-};
+});
+
+export default router;

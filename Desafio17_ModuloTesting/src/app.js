@@ -16,8 +16,8 @@ import EErrors from './handlers/errors/enum-errors.js';
 import errorHandler from './middleware/errors/error-handler.js';
 import loggerMiddleware from './middleware/logger.middleware.js';
 import { swaggerDocs, swaggerUi } from './config/swaggerConfig.js';
-import productsRouter from './routes/products.routes.js';
-import cartsRouter from './routes/carts.routes.js';
+import productsController from './controllers/products.controller.js';
+import cartController from './controllers/cart.controller.js';
 
 dotenv.config();
 
@@ -71,8 +71,8 @@ app.use(errorHandler);
 
 //SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use('/products', productsRouter);
-app.use('/carts', cartsRouter);
+app.use('/products', productsController);
+app.use('/carts', cartController);
 
 // Exporta la función para obtener la instancia de Socket.io
 export function getIO() { return io; }
