@@ -8,7 +8,6 @@ import generateProducts from '../utils/products-mock.util.js';
 import passwordController from '../controllers/password.controller.js';
 import ProductManager from "../services/db/product.service.js";
 import { createLogger } from 'winston';
-import { swaggerDocs, swaggerUi } from '../config/swaggerConfig.js';
 
 const router = Router();
 const manager = new ProductManager('./src/data/products.json');
@@ -18,9 +17,6 @@ router.use('/auth', authController);
 router.use('/user', userController);
 router.use('/products', productsRouter);
 router.use('/carts', cartsRouter);
-router.use('/tickets', ticketController);
-router.use('/password', passwordController);
-router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 router.get('/mockingproducts/:numProducts', (req, res, next) => {
     try {
@@ -65,5 +61,18 @@ router.get('/addProduct', (req, res) => {
 router.get('/chat', (req, res) => {
     res.render('chat');
 });
+
+//Rutas de Tickets
+router.get('/tickets', ticketController.getAllTickets);
+router.get('/tickets/:id', ticketController.getTicketById);
+router.post('/tickets', ticketController.createTicket);
+router.put('/tickets/:id', ticketController.updateTicket);
+router.delete('/tickets/:id', ticketController.deleteTicket);
+
+//Rutas de Password
+router.get('/forgot-password', passwordController.forgotPassword);
+router.post('/forgot-password', passwordController.forgotPassword); 
+router.get('/reset-password/:token', passwordController.resetPasswordForm); 
+router.post('/reset-password/:token', passwordController.resetPassword); 
 
 export default router;
