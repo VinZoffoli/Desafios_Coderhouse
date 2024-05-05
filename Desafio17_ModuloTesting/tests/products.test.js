@@ -11,7 +11,11 @@ describe('Products Router', () => {
             const response = await request.get('/products');
             expect(response.status).to.equal(200);
             expect(response.body).to.be.an('array');
-            expect(response.body).to.have.length.above(0);
+            const product = response.body[0];
+            expect(product).to.have.property('id');
+            expect(product).to.have.property('name');
+            expect(product).to.have.property('price');
+            expect(product).to.have.property('description');
         });
     });
 
@@ -22,6 +26,9 @@ describe('Products Router', () => {
             expect(response.status).to.equal(200);
             expect(response.body).to.be.an('object');
             expect(response.body).to.have.property('id', productId);
+            expect(response.body).to.have.property('name');
+            expect(response.body).to.have.property('price');
+            expect(response.body).to.have.property('description');
         });
     });
 
@@ -36,6 +43,7 @@ describe('Products Router', () => {
             expect(response.status).to.equal(201);
             expect(response.body).to.be.an('object');
             expect(response.body).to.have.property('name', newProduct.name);
+            expect(response.body).to.have.property('id');
         });
     });
 });
