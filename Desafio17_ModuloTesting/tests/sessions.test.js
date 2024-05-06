@@ -1,6 +1,5 @@
 import * as chai from 'chai';
 import supertest from 'supertest';
-import app from '../src/app.js'; 
 
 const expect = chai.expect;
 const request = supertest('http://localhost:3000');
