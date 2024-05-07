@@ -37,7 +37,7 @@ router.post('/add', async (req, res, next) => {
         let user = await UserModel.findById(userId);
 
         if (!user) {
-            throw new Error('Usuario no encontrado');
+            return res.status(500).json({ error: 'Usuario no encontrado' }); 
         }
 
         let cart;
@@ -52,11 +52,12 @@ router.post('/add', async (req, res, next) => {
         }
 
         await user.save();
-        res.status(200).json({ message: 'Producto agregado al carrito' });
+        res.status(201).json({ message: 'Producto agregado al carrito' });
     } catch (error) {
         next(error);
     }
 });
+
 
 /**
  * @swagger
@@ -110,11 +111,12 @@ router.get('/:cid', async (req, res) => {
 
         console.log(cart);
 
-        res.render('cart', { products: cart.products });
+        res.status(200).json(cart); 
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
 });
+
 
 /**
  * @swagger

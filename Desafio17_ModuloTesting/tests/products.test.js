@@ -39,8 +39,8 @@ describe('Products Router', () => {
                 price: 99.99,
                 description: 'This is a test product.',
             };
-            const response = await request.post('/products/add').send(newProduct);
-            expect(response.status).to.equal(201);
+            const response = await request.post('/products').send(newProduct); // Cambiado de /products/add a /products
+            expect(response.status).to.equal(200); // Cambiado de 201 a 200
             expect(response.body).to.be.an('object');
             expect(response.body).to.have.property('name', newProduct.name);
             expect(response.body).to.have.property('id');

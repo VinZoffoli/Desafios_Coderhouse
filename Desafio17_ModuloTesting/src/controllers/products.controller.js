@@ -206,26 +206,12 @@ router.post('/', async (req, res, next) => {
 
         await productRepository.addItem(newProduct);
 
-        res.status(201).json({ success: true, message: 'Producto agregado correctamente' });
+        res.status(200).json({ success: true, message: 'Producto agregado correctamente' });
     } catch (error) {
         next(error);
     }
 });
 
-router.post('/', async (req, res, next) => {
-    try {
-        let productToAdd = req.body;
-        if (!('status' in productToAdd)) {
-            productToAdd.status = true;
-        }
-        let status = await productService.addProduct(productToAdd);
-        const io = getIO();
-        io.emit('newProduct', status.product);
-        res.status(status.code).json({ status: status.status })
-    } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-    }
-});
 
 router.delete('/:id', async (req, res, next) => {
     try {
@@ -287,6 +273,7 @@ router.put('/:id', async (req, res, next) => {
         next(error);
     }
 });
+
 
 /**
  * @swagger
