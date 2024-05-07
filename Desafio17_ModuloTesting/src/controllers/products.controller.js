@@ -24,25 +24,12 @@ const productService = new ProductService();
  */
 router.get('/', async (req, res) => {
     try {
-        const user = req.user;
-        const useremail = user.email;
-        const cartId = user.cartId;
-        const role = user.role;
-
         const products = await productRepository.getItems();
-
-        res.render('products', {
-            user,
-            useremail,
-            role,
-            cartId,
-            products: products.docs,
-        });
+        res.status(200).json(products); // Devuelve los productos en formato JSON
     } catch (error) {
         res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
 });
-
 
 /**
  * @swagger
@@ -206,7 +193,7 @@ router.post('/', async (req, res, next) => {
 
         await productRepository.addItem(newProduct);
 
-        res.status(200).json({ success: true, message: 'Producto agregado correctamente' });
+        res.status(201).json({ success: true, message: 'Producto agregado correctamente' }); 
     } catch (error) {
         next(error);
     }
@@ -245,11 +232,11 @@ router.delete('/:id', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        const productId = req.params.id;
+        const { id } = req.params; 
         const { title, description, price } = req.body;
         const user = req.user;
 
-        const product = await productRepository.getItemById(productId);
+        const product = await productRepository.getItemById(id); 
 
         if (!product) {
             throw CustomError.createError({
@@ -260,7 +247,7 @@ router.put('/:id', async (req, res, next) => {
         }
 
         if (user.role === 'admin' || (user.role === 'premium' && product.owner.toString() === user._id.toString())) {
-            const updatedProduct = await productRepository.updateItem(productId, { title, description, price });
+            const updatedProduct = await productRepository.updateItem(id, { title, description, price }); 
             res.status(200).json({ success: true, message: 'Producto actualizado correctamente', updatedProduct });
         } else {
             throw CustomError.createError({

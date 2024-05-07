@@ -73,8 +73,8 @@ router.post('/add', async (req, res, next) => {
  */
 router.post('/', async (req, res) => {
     try {
-        let status = await manager.addCart();
-        res.status(status.code).json({ status: status.status });
+        const newCart = await CartModel.create({ products: [] }); 
+        res.status(201).json({ message: 'Carrito creado correctamente', cartId: newCart._id });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
