@@ -134,7 +134,7 @@ router.get('/:pid', async (req, res, next) => {
         const product = await productService.getProductById(pid);
 
         if (product) {
-            res.send({ status: "success", payload: product });
+            res.status(200).json({ status: "success", payload: product }); 
         } else {
             res.status(404).json({ 'error': 'Producto no encontrado' });
         }

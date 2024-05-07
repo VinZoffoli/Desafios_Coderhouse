@@ -32,7 +32,11 @@ const router = Router();
 router.post('/add', async (req, res, next) => {
     try {
         const { productId } = req.body;
-        const { userId } = req.session;
+        const userId = req.session.userId; 
+
+        if (!userId) {
+            return res.status(500).json({ error: 'ID de usuario no encontrado en la sesión' }); 
+        }
 
         let user = await UserModel.findById(userId);
 
@@ -43,10 +47,13 @@ router.post('/add', async (req, res, next) => {
         let cart;
 
         if (!user.cartId) {
+            console.log('Creando nuevo carrito...');
             cart = await CartModel.create({ products: [productId] });
+            console.log('Nuevo carrito:', cart);
             user.cartId = cart._id;
         } else {
             cart = await CartModel.findById(user.cartId);
+            console.log('Carrito existente:', cart);
             cart.products.push(productId);
             await cart.save();
         }
@@ -54,6 +61,7 @@ router.post('/add', async (req, res, next) => {
         await user.save();
         res.status(201).json({ message: 'Producto agregado al carrito' });
     } catch (error) {
+        console.error('Error en la creación del carrito:', error);
         next(error);
     }
 });
@@ -112,6 +120,16 @@ router.get('/:cid', async (req, res) => {
         console.log(cart);
 
         res.status(200).json(cart); 
+    } catch (error) {
+        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
+    }
+});
+
+// Endpoint para obtener todos los carritos
+router.get('/', async (req, res) => {
+    try {
+        const carts = await CartModel.find().lean();
+        res.status(200).json(carts);
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }

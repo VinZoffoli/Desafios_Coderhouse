@@ -19,16 +19,16 @@ describe('Products Router', () => {
         });
     });
 
-    describe('GET /products/:pid', () => {
-        it('should return a specific product by ID', async () => {
-            const productId = '1'; 
-            const response = await request.get(`/products/${productId}`);
-            expect(response.status).to.equal(200);
-            expect(response.body).to.be.an('object');
-            expect(response.body).to.have.property('id', productId);
-            expect(response.body).to.have.property('title'); 
-            expect(response.body).to.have.property('price');
-            expect(response.body).to.have.property('description');
+    describe('Products Router', () => {
+        describe('GET /products/:pid', () => {
+            it('should return a specific product by ID', async () => {
+                const productId = '65a6ef4e8e09c100fed1eb4a'; 
+                const response = await request.get(`/products/${productId}`);
+                expect(response.status).to.equal(200); 
+                expect(response.body).to.be.an('object');
+                expect(response.body).to.have.property('status', 'success');
+                expect(response.body).to.have.property('payload'); 
+            });
         });
     });
 

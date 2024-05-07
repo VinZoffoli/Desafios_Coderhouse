@@ -22,10 +22,18 @@ describe('Carts Router', () => {
         });
     });
 
-    describe('POST /carts/add', () => { 
+    describe('POST /cart/add', () => { 
         it('should create a new cart', async () => {
-            const newCart = {};
-            const response = await request.post('/carts/add').send(newCart);
+            const loginCredentials = {
+                username: 'vinzoffoli@gmail.com',
+                password: '12345'
+            };
+            
+            const loginResponse = await request.post('/login').send(loginCredentials);            
+            const userId = loginResponse.body.userId; 
+            const productId = '65a6ef4e8e09c100fed1eb4a';
+            const newCart = { productId, userId };
+            const response = await request.post('/cart/add').send(newCart); 
             expect(response.status).to.equal(201);
             expect(response.body).to.be.an('object');
         });
