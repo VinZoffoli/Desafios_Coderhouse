@@ -29,8 +29,10 @@ authController.post('/login', passport.authenticate('local', {
         email: req.user.email,
     };
     const token = generateToken(tokenInfo);
+    
     res.cookie('jwt', token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
-    res.redirect('/products/products');
+    
+    res.redirect('/products');
 });
 
 authController.get('/logout', (req, res) => {

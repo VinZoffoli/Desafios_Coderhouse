@@ -103,9 +103,11 @@ router.get('/paginate', async (req, res) => {
             showNext: products.hasNextPage,
         });
     } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
+        console.error(error);
+        res.status(500).render('error', { message: 'Error en el servidor', error: error });
     }
 });
+
 
 /**
  * @swagger

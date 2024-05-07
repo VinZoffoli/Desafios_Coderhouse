@@ -32,16 +32,16 @@ const router = Router();
 router.post('/add', async (req, res, next) => {
     try {
         const { productId } = req.body;
-        const userId = req.session.userId; 
+        const userId = req.session.userId;
 
         if (!userId) {
-            return res.status(500).json({ error: 'ID de usuario no encontrado en la sesión' }); 
+            return res.status(500).json({ error: 'ID de usuario no encontrado en la sesión' });
         }
 
         let user = await UserModel.findById(userId);
 
         if (!user) {
-            return res.status(500).json({ error: 'Usuario no encontrado' }); 
+            return res.status(500).json({ error: 'Usuario no encontrado' });
         }
 
         let cart;
@@ -59,7 +59,7 @@ router.post('/add', async (req, res, next) => {
         }
 
         await user.save();
-        res.status(201).json({ message: 'Producto agregado al carrito' });
+        res.status(201).json({ message: 'Producto agregado al carrito', cookies: req.headers['set-cookie'] });
     } catch (error) {
         console.error('Error en la creación del carrito:', error);
         next(error);
@@ -81,7 +81,7 @@ router.post('/add', async (req, res, next) => {
  */
 router.post('/', async (req, res) => {
     try {
-        const newCart = await CartModel.create({ products: [] }); 
+        const newCart = await CartModel.create({ products: [] });
         res.status(201).json({ message: 'Carrito creado correctamente', cartId: newCart._id });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
@@ -119,7 +119,7 @@ router.get('/:cid', async (req, res) => {
 
         console.log(cart);
 
-        res.status(200).json(cart); 
+        res.status(200).json(cart);
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }

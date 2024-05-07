@@ -18,6 +18,7 @@ import loggerMiddleware from './middleware/logger.middleware.js';
 import { swaggerDocs, swaggerUi } from './config/swaggerConfig.js';
 import productsController from './controllers/products.controller.js';
 import cartController from './controllers/cart.controller.js';
+import authController from './controllers/auth.controller.js';
 
 dotenv.config();
 
@@ -41,6 +42,9 @@ app.set('views', process.cwd() + '/src/views');
 app.set('view engine', 'handlebars');
 
 app.use(loggerMiddleware);
+
+app.use(cookieParser());
+
 
 // Redirige la raíz a la página de inicio de sesión
 app.get('/', (req, res) => { res.redirect('/auth/login'); });

@@ -23,17 +23,20 @@ describe('Carts Router', () => {
     });
 
     describe('POST /cart/add', () => { 
-        it('should create a new cart', async () => {
+        it('should create a new cart and add a product to it', async () => {
             const loginCredentials = {
-                username: 'vinzoffoli@gmail.com',
-                password: '12345'
+                email: 'vinzoffoli@gmail.com', 
+                password: '$2b$10$VKqz.9mV5h9ajAAdBziXs.EgrvHBueIfNQe1Qson68cAEV.ch1.0W'
             };
-            
-            const loginResponse = await request.post('/login').send(loginCredentials);            
-            const userId = loginResponse.body.userId; 
+            const loginResponse = await request.post('/auth/login').send(loginCredentials);
+    
+            const cookies = loginResponse.headers['set-cookie'];
+    
             const productId = '65a6ef4e8e09c100fed1eb4a';
-            const newCart = { productId, userId };
-            const response = await request.post('/cart/add').send(newCart); 
+            const newCart = { productId };
+    
+            const response = await request.post('/cart/add').set('Cookie', cookies).send(newCart);
+    
             expect(response.status).to.equal(201);
             expect(response.body).to.be.an('object');
         });
