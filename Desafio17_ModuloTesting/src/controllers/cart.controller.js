@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as UserModel from '../DAO/models/user.js';
+import UserModel from '../DAO/models/user.js';
 import { CartModel } from '../DAO/models/cart.js';
 import CartManager from "../services/db/cart.service.js";
 import { MODEL_CARTS } from "../DAO/models/cart.js";
@@ -32,7 +32,7 @@ const router = Router();
 router.post('/add', async (req, res, next) => {
     try {
         const { productId } = req.body;
-        const userId = req.session.userId;
+        const userId = req.session.passport.user;
 
         if (!userId) {
             return res.status(500).json({ error: 'ID de usuario no encontrado en la sesión' });
