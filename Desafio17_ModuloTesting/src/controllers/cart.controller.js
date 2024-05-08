@@ -119,7 +119,7 @@ router.get('/:cid', async (req, res) => {
 
         console.log(cart);
 
-        res.status(200).json(cart);
+        res.render('cart', { products: cart.products });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }

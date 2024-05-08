@@ -24,8 +24,16 @@ const productService = new ProductService();
  */
 router.get('/', async (req, res) => {
     try {
+        res.redirect('/products/paginate');
+    } catch (error) {
+        res.status(500).json({ error: `Error en el servidor: ${error.message}` });
+    }
+});
+
+router.get('/json', async (req, res) => {
+    try {
         const products = await productRepository.getItems();
-        res.status(200).json(products); // Devuelve los productos en formato JSON
+        res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }

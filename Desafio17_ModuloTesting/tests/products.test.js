@@ -7,7 +7,7 @@ const request = supertest('http://localhost:3000');
 describe('Products Router', () => {
     describe('GET /products', () => {
         it('should return a list of products', async () => {
-            const response = await request.get('/products');
+            const response = await request.get('/products/json');
             expect(response.status).to.equal(200);
             expect(response.body).to.be.an('array');
             response.body.forEach(product => {
