@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <h1>Checkout</h1>
+    <form id="payment-form">
+        <div id="error-message" role="alert"></div>
+        <button id="checkout-button">Pagar ahora</button>
+    </form>
+    <script>
+        var stripe = Stripe('{{pk_test_51PG5x6Rrbv5dfTv6ZXALTxFNRXCNgj5JfL0WChJFaSzn85uUbtWwtne9kC8dEQkCl7nIvV6228n2t54SLd20CWZJ00uULCCC1T}}');
+        var checkoutButton = document.getElementById('checkout-button');
+
+        checkoutButton.addEventListener('click', function () {
+            fetch('/api/payments/create-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cid: '{{cartId}}'
+                })
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({ sessionId: session.sessionId });
+            })
+            .then(function (result) {
+                if (result.error) {
+                    var errorElement = document.getElementById('error-message');
+                    errorElement.textContent = result.error.message;
+                }
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+</html>
