@@ -4,6 +4,7 @@ import CustomError from '../handlers/errors/custom-error.js';
 import EErrors from '../handlers/errors/enum-errors.js';
 import User from '../DAO/models/user.js';
 import ProductService from "../services/db/product.service.js";
+import { CartModel } from '../DAO/models/cart.js';
 
 const router = express.Router();
 const productService = new ProductService();
@@ -82,14 +83,18 @@ router.get('/paginate', async (req, res) => {
 
         const user = req.user;
         const useremail = user.useremail;
-        const cartId = user.cartId;
+        const cartId = req.user.cartId;
         const role = user.role;
+
+        const cart = await CartModel.findById(cartId);
+        const cartCount = cart ? cart.products.length : 0;
 
         res.render('products', {
             user,
             useremail,
             role,
             cartId,
+            cartCount: cartCount,
             products: products.docs,
             totalPages: products.totalPages,
             prevPage: products.prevPage,

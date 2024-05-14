@@ -192,7 +192,7 @@
                 });
 
                 if (response.ok) {
-                    updateCartCount(cartId);
+                    updateCartCount(cartId); // Llamada aquí para actualizar el conteo después de agregar un producto
                     alert(`Producto agregado al carrito con ID: ${productId}`);
                 } else {
                     alert(`Error al agregar producto al carrito: ${response.statusText}`);
@@ -219,7 +219,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const cartId = '{{cartId}}'; 
+            const cartId = '{{cartId}}';
             updateCartCount(cartId);
         });
     </script>
