@@ -151,7 +151,7 @@
             <p class="product-price">Precio: ${{this.product.price}}</p>
             <p class="product-quantity">Cantidad: {{this.quantity}}</p>
         </div>
-        <button onclick="removeProduct('{{this.product_id}}', '{{user.cartId}}')">Eliminar</button>
+        <button onclick="removeProduct('{{this.product._id}}', '{{cartId}}')">Eliminar</button>
     </div>
     {{/each}}
     {{else}}

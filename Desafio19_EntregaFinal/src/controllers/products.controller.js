@@ -3,11 +3,9 @@ import { productRepository } from '../Repository/index.js';
 import CustomError from '../handlers/errors/custom-error.js';
 import EErrors from '../handlers/errors/enum-errors.js';
 import User from '../DAO/models/user.js';
-import ProductManager from "../services/db/product.service.js";
 import ProductService from "../services/db/product.service.js";
 
 const router = express.Router();
-const manager = new ProductManager('./src/data/products.json');
 const productService = new ProductService();
 
 /**
@@ -268,76 +266,6 @@ router.put('/:id', async (req, res, next) => {
         }
     } catch (error) {
         next(error);
-    }
-});
-
-
-/**
- * @swagger
- * /products:
- *   put:
- *     summary: Actualizar un producto existente.
- *     description: Actualiza un producto existente.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *               price:
- *                 type: number
- *     responses:
- *       '200':
- *         description: Producto actualizado correctamente.
- *       '500':
- *         description: Error en el servidor.
- */
-router.put('/:id', async (req, res, next) => {
-    try {
-        const { pid } = req.params;
-        const productToUpdate = req.body;
-
-        const status = await productService.updateProduct(pid, productToUpdate);
-
-        res.status(status.code).json({ status: status.status });
-    } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
-    }
-});
-
-/**
- * @swagger
- * /products/{id}:
- *   delete:
- *     summary: Eliminar un producto existente.
- *     description: Elimina un producto existente por su ID.
- *     parameters:
- *       - name: id
- *         in: path
- *         description: ID del producto a eliminar.
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: Producto eliminado correctamente.
- *       '500':
- *         description: Error en el servidor.
- */
-router.delete('/:id', async (req, res, next) => {
-    try {
-        const { pid } = req.params;
-
-        const status = await productService.deleteProductById(pid);
-
-        res.status(status.code).json({ status: status.status });
-    } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }
 });
 
