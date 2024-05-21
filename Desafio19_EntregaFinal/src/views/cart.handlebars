@@ -144,14 +144,14 @@
 
     {{#if products.length}}
     {{#each products}}
-    <div class="product-container">
+    <div class="product-container" id="product-{{this.product._id}}">
         <p class="product-title">{{this.product.title}}</p>
         <p class="product-description">Descripción: {{this.product.description}}</p>
         <div class="product-details">
             <p class="product-price">Precio: ${{this.product.price}}</p>
             <p class="product-quantity">Cantidad: {{this.quantity}}</p>
         </div>
-        <button onclick="removeProduct('{{this.product._id}}', '{{cartId}}')">Eliminar</button>
+        <button onclick="removeProduct('{{this.product._id}}', '{{../cartId}}')">Eliminar</button>
     </div>
     {{/each}}
     {{else}}
@@ -160,7 +160,10 @@
 
     <script>
         function removeProduct(productId, cartId) {
-            fetch(`/cart/${cartId}/product/${productId}`, {
+            const url = `/cart/${cartId}/product/${productId}`;
+            console.log('URL de la solicitud DELETE:', url);
+
+            fetch(url, {
                 method: 'DELETE',
             })
                 .then(response => {

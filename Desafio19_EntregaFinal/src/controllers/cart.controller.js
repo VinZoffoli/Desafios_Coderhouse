@@ -50,11 +50,13 @@ router.post('/add', async (req, res, next) => {
             user.cartId = cart._id;
         } else {
             cart = await CartModel.findById(user.cartId);
-            const existingProduct = cart.products.find(p => p.product.toString() === productId);
+            const existingProductIndex = cart.products.findIndex(p => p.product.toString() === productId);
 
-            if (existingProduct) {
-                existingProduct.quantity += 1;
+            if (existingProductIndex !== -1) {
+                console.log('El producto ya está en el carrito. Índice:', existingProductIndex);
+                cart.products[existingProductIndex].quantity += 1;
             } else {
+                console.log('El producto no está en el carrito. Añadiendo nuevo producto.');
                 cart.products.push({ product: productId, quantity: 1 });
             }
 
@@ -68,7 +70,6 @@ router.post('/add', async (req, res, next) => {
         next(error);
     }
 });
-
 
 /**
  * @swagger
