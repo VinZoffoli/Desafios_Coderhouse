@@ -166,7 +166,7 @@
                 const productId = event.target.dataset.pid;
 
                 try {
-                    const response = await fetch(`/cart/${cartId}/product/${productId}`, {
+                    const response = await fetch(`/carts/${cartId}/product/${productId}`, {
                         method: 'DELETE'
                     });
 
