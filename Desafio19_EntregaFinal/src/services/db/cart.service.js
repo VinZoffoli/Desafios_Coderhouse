@@ -41,7 +41,7 @@ export default class CartManager {
 
             cart.products.push({ product: pid, quantity: 1 });
 
-            await cart.save();  
+            await cart.save();
             return { code: 200, status: 'Producto agregado al carrito' };
         } catch (error) {
             console.log(error);
@@ -54,13 +54,14 @@ export default class CartManager {
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
-
+    
             cart.products = cart.products.filter(product => product.product.toString() !== pid);
             await cart.save();
-
+    
             return { code: 200, status: 'Producto eliminado del carrito' };
         } catch (error) {
             console.log(error);
+            return { code: 500, status: 'Error al eliminar el producto del carrito' };
         }
     }
 
