@@ -142,16 +142,16 @@
 
     <h1>Carrito de Compras</h1>
 
-    {{#if products.length}}
-    {{#each products}}
+    {{#if cart.products.length}}
+    {{#each cart.products}}
     <div class="product-container">
-        <p class="product-title">{{this.product.title}}</p>
-        <p class="product-description">Descripción: {{this.product.description}}</p>
+        <p class="product-title">{{this.productId.title}}</p>
+        <p class="product-description">Descripción: {{this.productId.description}}</p>
         <div class="product-details">
-            <p class="product-price">Precio: ${{this.product.price}}</p>
+            <p class="product-price">Precio: ${{this.productId.price}}</p>
             <p class="product-quantity">Cantidad: {{this.quantity}}</p>
         </div>
-        <button onclick="removeProduct('{{this.product._id}}', '{{cartId}}')">Eliminar</button>
+        <button onclick="removeProduct('{{../cartId}}', '{{this.productId._id}}')">Eliminar</button>
     </div>
     {{/each}}
     {{else}}
@@ -159,20 +159,30 @@
     {{/if}}
 
     <script>
-        function removeProduct(productId, cartId) {
-            fetch(`/carts/${cartId}/products/${productId}`, {
-                method: 'DELETE',
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+        async function removeProduct(cartId, productId) {
+            try {
+                const response = await fetch(`/carts/${cartId}/product/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Producto eliminado:', data);
-                })
-                .catch(error => console.error('Error al eliminar el producto:', error));
+                });
+
+                if (response.ok) {
+                    document.querySelector(`button[onclick="removeProduct('${cartId}', '${productId}')"]`).parentElement.remove();
+                    const cartCountElement = document.getElementById('cart-count');
+                    const cartCount = parseInt(cartCountElement.textContent) - 1;
+                    cartCountElement.textContent = cartCount;
+
+                    if (cartCount === 0) {
+                        document.getElementById('empty-cart-message').style.display = 'block';
+                    }
+                } else {
+                    console.error('Failed to remove product');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     </script>
 </body>

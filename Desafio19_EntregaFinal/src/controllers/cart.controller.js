@@ -106,16 +106,16 @@ router.post('/', async (req, res) => {
  *         description: Error en el servidor.
  */
 router.get('/:cid', async (req, res) => {
+    const { cid } = req.params;
     try {
-        const cart = await CartModel.findById(req.params.cid).populate('products.product').lean();
-
+        const cart = await Cart.findById(cid).populate('products.productId');
         if (!cart) {
-            return res.status(404).json({ error: 'Carrito no encontrado' });
+            return res.status(404).send('Carrito no encontrado');
         }
 
-        res.render('cart', { products: cart.products });
+        res.render('cart', { cart, cartId: cid });
     } catch (error) {
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
+        return res.status(500).json({ error: 'Ha ocurrido un error' });
     }
 });
 
@@ -207,15 +207,26 @@ router.post('/:cid/product/:pid', async (req, res) => {
  *         description: Error en el servidor.
  */
 router.delete('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
     try {
-        const { cid, pid } = req.params;
-        const status = await manager.removeProductFromCart(cid, pid);
-        res.status(status.code).json({ status: status.status });
+        const cart = await Cart.findById(cid);
+        if (!cart) {
+            return res.status(404).send('Cart not found');
+        }
+
+        const productIndex = cart.products.findIndex(product => product.productId.toString() === pid);
+        if (productIndex !== -1) {
+            cart.products.splice(productIndex, 1);
+            await cart.save();
+            return res.status(200).json({ message: 'Producto removido del carrito' });
+        } else {
+            return res.status(404).send('Producto no encontrado');
+        }
     } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
+        return res.status(500).json({ error: 'A ocurrido un error eliminando el producto' });
     }
 });
+
 
 /**
  * @swagger
