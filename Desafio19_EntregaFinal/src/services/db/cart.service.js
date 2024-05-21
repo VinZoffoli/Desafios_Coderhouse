@@ -1,4 +1,4 @@
-import { MODEL_CARTS } from "../../DAO/models/cart.js";
+import { CartModel } from "../../DAO/models/cart.js";
 import Product from "../../DAO/models/product.js";
 export default class CartManager {
 
@@ -7,7 +7,7 @@ export default class CartManager {
             const newCart = {
                 products: []
             };
-            const result = await MODEL_CARTS.create(newCart);
+            const result = await CartModel.create(newCart);
             return { code: 200, status: `Carrito agregado con id: ${result.id}` };
         } catch (error) {
             console.log(error);
@@ -16,7 +16,7 @@ export default class CartManager {
 
     async getCarts() {
         try {
-            const carts = await MODEL_CARTS.find();
+            const carts = await CartModel.find();
             return carts.map(cart => cart.toObject());
         } catch (error) {
             console.log(error);
@@ -25,7 +25,7 @@ export default class CartManager {
 
     async getProductsOfCartById(id) {
         try {
-            const cart = await MODEL_CARTS.findById(id);
+            const cart = await CartModel.findById(id);
             return cart ? cart.products : false;
         } catch (error) {
             console.log(error);
@@ -34,7 +34,7 @@ export default class CartManager {
 
     async addProductToCart(cid, pid) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await CartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
@@ -55,7 +55,7 @@ export default class CartManager {
 
     async removeProductFromCart(cid, pid) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await CartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
@@ -72,7 +72,7 @@ export default class CartManager {
 
     async updateCart(cid, products) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await CartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
@@ -90,7 +90,7 @@ export default class CartManager {
 
     async updateProductQuantity(cid, pid, quantity) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await CartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
@@ -110,7 +110,7 @@ export default class CartManager {
 
     async clearCart(cid) {
         try {
-            const cart = await MODEL_CARTS.findById(cid);
+            const cart = await CartModel.findById(cid);
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };
             }
@@ -126,7 +126,7 @@ export default class CartManager {
 
     async getCartDetails(cartId) {
         try {
-            const cart = await MODEL_CARTS.findById(cartId).populate('products.product');
+            const cart = await CartModel.findById(cartId).populate('products.product');
 
             if (!cart) {
                 return { code: 404, status: 'Carrito no encontrado' };

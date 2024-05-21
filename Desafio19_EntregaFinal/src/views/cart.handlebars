@@ -150,8 +150,9 @@
         <div class="product-details">
             <p class="product-price">Precio: ${{this.product.price}}</p>
             <p class="product-quantity">Cantidad: {{this.quantity}}</p>
+            <button class="btn-remove-product" data-cid="{{../cartId}}"
+                data-pid="{{this.product._id}}">Eliminar</button>
         </div>
-        <button onclick="removeProduct('{{this.product._id}}', '{{../cartId}}')">Eliminar</button>
     </div>
     {{/each}}
     {{else}}
@@ -159,31 +160,30 @@
     {{/if}}
 
     <script>
-        function removeProduct(productId, cartId) {
-            const url = `/cart/${cartId}/product/${productId}`;
-            console.log('URL de la solicitud DELETE:', url);
+        document.querySelectorAll('.btn-remove-product').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const cartId = event.target.dataset.cid;
+                const productId = event.target.dataset.pid;
 
-            fetch(url, {
-                method: 'DELETE',
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Producto eliminado:', data);
-                    const productElement = document.getElementById(`product-${productId}`);
-                    if (productElement) {
-                        productElement.remove();
+                try {
+                    const response = await fetch(`/cart/${cartId}/product/${productId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        window.location.reload();
                     } else {
-                        console.error('Error: Elemento del producto no encontrado en el DOM');
+                        console.error('Error al eliminar el producto:', response.statusText);
+                        alert('Error al eliminar el producto del carrito. Por favor, intenta nuevamente.');
                     }
-                })
-                .catch(error => console.error('Error al eliminar el producto:', error));
-        }
+                } catch (error) {
+                    console.error('Error al eliminar el producto:', error);
+                    alert('Error al eliminar el producto del carrito. Por favor, intenta nuevamente.');
+                }
+            });
+        });
     </script>
+
 </body>
 
 </html>
