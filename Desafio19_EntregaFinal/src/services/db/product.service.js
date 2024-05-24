@@ -4,14 +4,27 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 export default class ProductService {
     async getPaginatedProducts(query, options) {
         try {
-            const leanQuery = { ...query, lean: true }; 
-            const products = await Product.paginate({}, leanQuery, options);
-            return products;
+            const { limit, page, sort, searchQuery } = query;
+            const leanQuery = { ...options, lean: true };
+            const filteredProducts = searchQuery
+                ? await Product.paginate(searchQuery, leanQuery)
+                : await Product.paginate({}, leanQuery);
+            return {
+                docs: filteredProducts.docs,
+                totalDocs: filteredProducts.totalDocs,
+                limit: filteredProducts.limit,
+                totalPages: filteredProducts.totalPages,
+                page: filteredProducts.page,
+                hasNextPage: filteredProducts.hasNextPage,
+                hasPrevPage: filteredProducts.hasPrevPage,
+                prevPage: filteredProducts.prevPage,
+                nextPage: filteredProducts.nextPage
+            };
         } catch (error) {
             throw new Error(`Error getting paginated products: ${error}`);
         }
     }
-
+    
     async isCodeUnique(code) {
         try {
             const products = await this.getProducts();

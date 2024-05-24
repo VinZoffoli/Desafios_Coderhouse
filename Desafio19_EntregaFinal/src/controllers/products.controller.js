@@ -79,7 +79,12 @@ router.get('/paginate', async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
 
-        const products = await productService.getPaginatedProducts({ limit, page, sort, query });
+        const searchQuery = {};
+        if (query) {
+            searchQuery.title = { $regex: new RegExp(query, 'i') };
+        }
+
+        const products = await productService.getPaginatedProducts({ limit, page, sort, searchQuery });
 
         const user = req.user;
         const useremail = user.useremail;

@@ -141,8 +141,10 @@
             <a href="/">Inicio</a>
             <a href="/products">Productos</a>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar productos...">
-                <button type="button"><i class="fas fa-search"></i></button>
+                <form action="/products/paginate" method="GET">
+                    <input type="text" name="query" placeholder="Buscar productos..." value="{{query}}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
             </div>
         </div>
         <div class="navbar-right">
