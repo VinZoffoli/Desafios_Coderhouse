@@ -21,6 +21,7 @@ const productService = new ProductService();
  *       '500':
  *         description: Error en el servidor.
  */
+
 router.get('/', async (req, res) => {
     try {
         res.redirect('/products/paginate');
@@ -87,7 +88,7 @@ router.get('/paginate', async (req, res) => {
         const products = await productService.getPaginatedProducts({ limit, page, sort, searchQuery });
 
         const user = req.user;
-        const useremail = user.useremail;
+        const email = user.email;
         const cartId = req.user.cartId;
         const role = user.role;
 
@@ -95,8 +96,11 @@ router.get('/paginate', async (req, res) => {
         const cartCount = cart ? cart.products.length : 0;
 
         res.render('products', {
-            user,
-            useremail,
+            user: {
+                firstName: req.user.firstName, 
+                role: req.user.role,
+            },
+            email,
             role,
             cartId,
             cartCount: cartCount,

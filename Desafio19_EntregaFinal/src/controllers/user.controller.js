@@ -4,7 +4,6 @@ import UserModel from '../DAO/models/user.js';
 
 const userController = express.Router();
 
-
 userController.get('/register', (req, res) => {
     res.render('register');
 });

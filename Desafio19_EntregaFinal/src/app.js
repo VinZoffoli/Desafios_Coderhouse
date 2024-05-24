@@ -18,7 +18,6 @@ import loggerMiddleware from './middleware/logger.middleware.js';
 import { swaggerDocs, swaggerUi } from './config/swaggerConfig.js';
 import productsController from './controllers/products.controller.js';
 import cartController from './controllers/cart.controller.js';
-import authController from './controllers/auth.controller.js';
 
 dotenv.config();
 
@@ -83,3 +82,4 @@ export function getIO() { return io; }
 
 // Conecta a la base de datos MongoDB
 connectMongoDB();
+
