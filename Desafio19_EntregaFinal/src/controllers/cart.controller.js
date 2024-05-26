@@ -121,7 +121,16 @@ router.get('/:cid', async (req, res) => {
             return res.status(404).json({ error: 'Carrito no encontrado' });
         }
 
-        res.render('cart', { products: cart.products, cartId: req.params.cid });
+        let totalPrice = 0;
+        let totalCartPrice = 0;
+
+        cart.products.forEach(product => {
+            product.totalPrice = product.product.price * product.quantity;
+            totalPrice += product.totalPrice;
+            totalCartPrice += product.product.price * product.quantity; // Sumar al total del carrito
+        });
+
+        res.render('cart', { products: cart.products, cartId: req.params.cid, totalPrice, totalCartPrice });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
     }

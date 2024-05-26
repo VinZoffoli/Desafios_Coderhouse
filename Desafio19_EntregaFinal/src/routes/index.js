@@ -17,7 +17,6 @@ router.use('/user', userController);
 router.use('/products', productsController);
 router.use('/carts', cartController); 
 router.use('/tickets', ticketController);
-router.use('/password', passwordController);
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 router.get('/mockingproducts/:numProducts', (req, res, next) => {
@@ -40,5 +39,11 @@ router.get('/loggerTest', (req, res, next) => {
     logger.fatal('Este es un mensaje de fatal');
     res.json({ message: 'Prueba exitosa del logger' });
 });
+
+//Rutas de Password
+router.get('/forgot-password', passwordController.forgotPassword);
+router.post('/forgot-password', passwordController.forgotPassword); 
+router.get('/reset-password/:token', passwordController.resetPasswordForm); 
+router.post('/reset-password/:token', passwordController.resetPassword); 
 
 export default router;

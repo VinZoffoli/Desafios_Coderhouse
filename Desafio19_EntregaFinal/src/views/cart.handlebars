@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras</title>
-    <style>
+     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -20,6 +20,8 @@
 
         h1 {
             color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
         .product-container {
@@ -33,6 +35,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .product-container:hover {
+            transform: scale(1.02);
         }
 
         .product-title {
@@ -76,6 +83,10 @@
             padding: 10px;
             color: #fff;
             width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #navbar a {
@@ -83,6 +94,12 @@
             color: #fff;
             margin-right: 20px;
             font-size: 16px;
+        }
+
+        #navbar .navbar-left,
+        #navbar .navbar-right {
+            display: flex;
+            align-items: center;
         }
 
         .search-bar {
@@ -118,6 +135,59 @@
         #cart-label {
             font-size: 14px;
         }
+
+        .buy-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .total-price-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .total-price {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .buy-button {
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background-color: #219150;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -148,7 +218,7 @@
         <p class="product-title">{{this.product.title}}</p>
         <p class="product-description">Descripción: {{this.product.description}}</p>
         <div class="product-details">
-            <p class="product-price">Precio: ${{this.product.price}}</p>
+            <p class="product-price">Precio: ${{totalPrice}}</p>
             <p class="product-quantity">Cantidad: {{this.quantity}}</p>
             <button class="btn-remove-product" data-cid="{{../cartId}}"
                 data-pid="{{this.product._id}}">Eliminar</button>
@@ -159,6 +229,13 @@
     <p id="empty-cart-message">El carrito está vacío</p>
     {{/if}}
 
+    <div class="buy-button-container">
+        <div class="total-price-card">
+            <p class="total-price">Total a pagar: ${{totalCartPrice}}</p>
+        </div>
+        <button class="buy-button">Comprar</button>
+    </div>
+    
     <script>
         document.querySelectorAll('.btn-remove-product').forEach(button => {
             button.addEventListener('click', async (event) => {

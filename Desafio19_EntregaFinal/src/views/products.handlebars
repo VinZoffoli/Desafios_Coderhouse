@@ -149,7 +149,7 @@
         </div>
         <div class="navbar-right">
             {{#if user}}
-            <p>Bienvenido, {{user.firstName}}. Rol: {{role}}</p>
+            <p>Bienvenido, {{#if user.firstName}}{{user.firstName}}{{else}}{{user.email}}{{/if}}. Rol: {{role}}</p>
             {{/if}}
             <a href="/carts/{{cartId}}">
                 <i class="fas fa-shopping-cart"></i>

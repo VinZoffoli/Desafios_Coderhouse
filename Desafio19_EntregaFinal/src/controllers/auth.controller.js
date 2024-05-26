@@ -10,10 +10,18 @@ const authController = express.Router();
 authController.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 authController.get('/github/callback', passport.authenticate('github', {
-    successRedirect: '/products/products',
     failureRedirect: '/login',
-    failureFlash: true,
-}));
+    failureFlash: true
+}), (req, res) => {
+    const tokenInfo = {
+        id: req.user._id,
+        role: req.user.role,
+        email: req.user.email,
+    };
+    const token = generateToken(tokenInfo);
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.redirect('/products');
+});
 
 authController.get('/login', (req, res) => {
     res.render('login');

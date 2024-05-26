@@ -1,6 +1,7 @@
 import passport from 'passport';
 import GitHubStrategy from 'passport-github2';
 import UserModel from "../DAO/models/user.js";
+import { CartModel } from '../DAO/models/cart.js';
 import bcrypt from 'bcrypt';
 import LocalStrategy from 'passport-local';
 
@@ -38,28 +39,33 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
 }));
 
 //GITHUB
-passport.use('github', new GitHubStrategy({
+passport.use(new GitHubStrategy({
     clientID: '5e9b9abbda4a0cdf2138',
     clientSecret: '8df9a050ded08dcbd8b946a63685c3f7a9f4f4c9',
     callbackURL: 'http://localhost:3000/auth/github/callback',
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         const { id, login, name, email } = profile._json;
-        const user = await UserModel.findOne({ githubId: id });
-
+        let user = await UserModel.findOne({ githubId: id });
         if (user) {
+            if (!user.cartId) {
+                const cart = await CartModel.create({ products: [] });
+                user.cartId = cart._id;
+                await user.save();
+            }
             return done(null, user);
         } else {
+            const cart = await CartModel.create({ products: [] }); // Crear un carrito
             const newUser = new UserModel({
-                email: email,
+                email: email || `${login}@github.com`, // Usa login como email de respaldo
                 githubId: id,
                 githubUsername: login,
-                firstName: name,  
-                lastName: name,   
+                firstName: name || login, // Usa login como respaldo para el nombre
+                lastName: name || login,
+                cartId: cart._id, // Asignar el carrito al nuevo usuario
             });
-
-            await newUser.save();
-            return done(null, newUser);
+            user = await newUser.save();
+            return done(null, user);
         }
     } catch (error) {
         return done(error);

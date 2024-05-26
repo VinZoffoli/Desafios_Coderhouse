@@ -11,7 +11,7 @@ const authController = express.Router();
 authController.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 authController.get('/github/callback', passport.authenticate('github', {
-    successRedirect: '/products/products',
+    successRedirect: '/products',
     failureRedirect: '/login',
     failureFlash: true,
 }));
