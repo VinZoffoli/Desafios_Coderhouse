@@ -55,14 +55,14 @@ passport.use(new GitHubStrategy({
             }
             return done(null, user);
         } else {
-            const cart = await CartModel.create({ products: [] }); // Crear un carrito
+            const cart = await CartModel.create({ products: [] });
             const newUser = new UserModel({
-                email: email || `${login}@github.com`, // Usa login como email de respaldo
+                email: email || `${login}@github.com`,
                 githubId: id,
                 githubUsername: login,
-                firstName: name || login, // Usa login como respaldo para el nombre
+                firstName: name || login,
                 lastName: name || login,
-                cartId: cart._id, // Asignar el carrito al nuevo usuario
+                cartId: cart._id,
             });
             user = await newUser.save();
             return done(null, user);

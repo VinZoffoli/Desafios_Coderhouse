@@ -82,4 +82,3 @@ export function getIO() { return io; }
 
 // Conecta a la base de datos MongoDB
 connectMongoDB();
-

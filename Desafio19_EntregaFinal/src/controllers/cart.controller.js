@@ -3,6 +3,8 @@ import UserModel from '../DAO/models/user.js';
 import { CartModel } from '../DAO/models/cart.js';
 import CartManager from "../services/db/cart.service.js";
 import Product from "../DAO/models/product.js";
+import sendEmail from "../services/db/email.service.js";
+import TicketService from "../services/db/ticket.service.js";
 
 const manager = new CartManager('./src/data/cart.json');
 const router = Router();
@@ -351,6 +353,40 @@ router.delete('/:cid', async (req, res) => {
         res.status(status.code).json({ status: status.status });
     } catch (error) {
         res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
+    }
+});
+
+router.post('/complete', async (req, res, next) => {
+    try {
+        const userId = req.session.passport.user;
+
+        if (!userId) {
+            return res.status(500).json({ error: 'ID de usuario no encontrado en la sesión' });
+        }
+
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(500).json({ error: 'Usuario no encontrado' });
+        }
+
+        const cartId = user.cartId;
+        const cart = await CartModel.findById(cartId).populate('products.product');
+
+        if (!cart) {
+            return res.status(500).json({ error: 'Carrito no encontrado' });
+        }
+
+        const ticketContent = await TicketService.generateTicket(user, cart.products);
+
+        await sendEmail(user.email, 'Ticket de compra', ticketContent);
+
+        await manager.clearCart(cartId);
+
+        res.status(200).json({ message: 'Compra completada exitosamente' });
+    } catch (error) {
+        console.error('Error al completar la compra:', error);
+        next(error);
     }
 });
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras</title>
-     <style>
+    <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -233,10 +233,29 @@
         <div class="total-price-card">
             <p class="total-price">Total a pagar: ${{totalCartPrice}}</p>
         </div>
-        <button class="buy-button">Comprar</button>
+        <button class="buy-button" id="buy-button">Comprar</button>
     </div>
-    
+
     <script>
+
+        document.getElementById('buy-button').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/carts/complete', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert('¡Compra realizada con éxito! Se ha enviado un correo electrónico con el ticket de compra.');
+                    window.location.reload();
+                } else {
+                    console.error('Error al completar la compra:', response.statusText);
+                    alert('Error al completar la compra. Por favor, intenta nuevamente.');
+                }
+            } catch (error) {
+                console.error('Error al completar la compra:', error);
+                alert('Error al completar la compra. Por favor, intenta nuevamente.');
+            }
+        });
         document.querySelectorAll('.btn-remove-product').forEach(button => {
             button.addEventListener('click', async (event) => {
                 const cartId = event.target.dataset.cid;
